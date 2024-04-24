@@ -1,18 +1,31 @@
 import express from "express";
-import { WebSocketServer } from "ws";
+import { Server } from "socket.io";
+import cors from "cors";
+import { PORT as port } from "./config/index.mjs";
 
 const app = express();
-const port = 8080;
+app.use(cors());
 
-const server = app.listen(port, () =>
+const httpServer = app.listen(port, () =>
 	console.info(`Server is listening at http://localhost:${port}`)
 );
 
-const wss = new WebSocketServer({ server });
+const io = new Server(httpServer, {
+	cors: {
+		origin: "*",
+	},
+});
 
-wss.on("connection", (ws) => {
-	ws.on("message", (data) => {
-		console.log(`data from client: ${data}`);
-		ws.send("Gotcha!");
+app.get("/api/health", (req, res) => {
+	return res.status(200).json({ message: "API is Healthy" });
+});
+
+io.on("connection", (socket) => {
+	console.log(`${socket.id} user just connected!`);
+	socket.on("message_from_client", (data) => {
+		console.info(`Message from Client: ${data}`);
+	});
+	socket.on("disconnect", () => {
+		console.log("A user disconnected");
 	});
 });
