@@ -13,10 +13,13 @@
     "ws": "^8.16.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "react": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "nodemon server.mjs",
+    "start": "node server.mjs",
+    "dev": "concurrently \"yarn server\" \"yarn react\""
   },
   "eslintConfig": {
     "extends": [
@@ -35,5 +38,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.0"
   }
 }
