@@ -22,12 +22,87 @@
 	--green: #34a853;
 }
 
+html {
+	font-size: 24px;
+}
+
 body {
 	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
 		Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
 		sans-serif;
 	background-color: var(--bgcolor);
 	color: var(--tcolor);
+}
+
+#root {
+	margin: 0 auto;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	gap: 24px;
+	height: 100vh;
+	padding: 5%;
+}
+
+#message-container {
+	border: 1px solid #000;
+	flex-grow: 1;
+	overflow-y: auto;
+}
+
+#message-container div {
+	background-color: #ccc;
+	padding: 5px;
+}
+
+#message-container div:nth-child(2n) {
+	background-color: #eee;
+	padding: 5px;
+}
+
+form {
+	width: 100%;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	flex-direction: column;
+	gap: 8px;
+}
+
+form .form-group {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: stretch;
+	gap: 8px;
+}
+
+form label {
+	width: 15%;
+}
+
+form button {
+	width: 15%;
+}
+
+form input {
+	flex: 0 1 auto;
+	width: 70%;
+	padding: 0 12px;
+	font-size: 24px;
+}
+
+button {
+	all: unset;
+	padding: 8px 12px;
+	border-radius: 4px;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	user-select: none;
+	font-size: 24px;
+	background-color: skyblue;
 }
 
 .dispn {
