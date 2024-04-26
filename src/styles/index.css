@@ -63,22 +63,17 @@ body {
 form {
 	width: 100%;
 	display: flex;
-	justify-content: flex-start;
-	align-items: center;
-	flex-direction: column;
-	gap: 8px;
-}
-
-form .form-group {
-	width: 100%;
-	display: flex;
 	justify-content: space-between;
 	align-items: stretch;
 	gap: 8px;
+	vertical-align: middle;
 }
 
 form label {
-	width: 15%;
+	width: 10%;
+	display: inline-flex;
+	justify-content: flex-start;
+	align-items: center;
 }
 
 form button {
@@ -87,7 +82,7 @@ form button {
 
 form input {
 	flex: 0 1 auto;
-	width: 70%;
+	width: 75%;
 	padding: 0 12px;
 	font-size: 24px;
 }
@@ -103,6 +98,11 @@ button {
 	user-select: none;
 	font-size: 24px;
 	background-color: skyblue;
+}
+
+button:active,
+button:focus {
+	filter: brightness(0.9);
 }
 
 .dispn {
