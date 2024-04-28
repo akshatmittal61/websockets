@@ -10,11 +10,16 @@ const App = () => {
 	const [message, setMessage] = useState("");
 	const [room, setRoom] = useState("");
 
+	const displayMessage = (message) => {
+		setMessages((prev) => [...prev, message]);
+	};
+
 	const sendMessage = (e) => {
 		e.preventDefault();
 		if (message === "") return;
 		if (!socket) return toast.error("Unable to connect to server");
-		socket.emit("send_message", message);
+		socket.emit("send_message", message, room);
+		displayMessage(message);
 		setMessage("");
 	};
 
@@ -33,14 +38,8 @@ const App = () => {
 		setIsConnectionEstablished(true);
 		setSocket(currentSocket);
 		currentSocket.on("connect", () => {
+			displayMessage(`ID: ${currentSocket.id}`);
 			toast.success("Made socket connection");
-		});
-		currentSocket.on("message_from_server", (data) => {
-			toast(`Message from server: ${data}`);
-			console.log(`Message from server: ${data}`);
-		});
-		currentSocket.on("disconnect", () => {
-			toast.success("Disconnected");
 		});
 		currentSocket.on("connect_error", (err) => {
 			toast.error(`Connection error: ${err}`);
@@ -50,15 +49,13 @@ const App = () => {
 	useEffect(() => {
 		if (socket) {
 			socket.on("recieve_message", (message) => {
-				setMessages((prev) => [...prev, message]);
+				displayMessage(message);
+			});
+			socket.on("disconnect", () => {
+				toast.success("Disconnected");
 			});
 		}
 	}, [socket]);
-
-	useEffect(() => {
-		establishConnection();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	return (
 		<>
