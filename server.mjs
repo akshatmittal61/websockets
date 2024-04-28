@@ -22,8 +22,14 @@ app.get("/api/health", (req, res) => {
 
 io.on("connection", (socket) => {
 	console.log(`${socket.id} user just connected!`);
-	socket.on("message_from_client", (data) => {
+	const token = socket.handshake.auth;
+	console.log(token);
+	socket.on("send_message", (data) => {
 		console.info(`Message from Client: ${data}`);
+		io.emit("recieve_message", `From server: ${data}`);
+	});
+	socket.on("chat message", (message) => {
+		console.log("chat message recieved on server", message);
 	});
 	socket.on("disconnect", () => {
 		console.log("A user disconnected");

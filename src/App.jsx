@@ -1,45 +1,64 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { io } from "socket.io-client";
 
 const App = () => {
 	const [isConnectionEstablished, setIsConnectionEstablished] =
 		useState(false);
+	const [socket, setSocket] = useState();
 	const [messages, setMessages] = useState([]);
 	const [message, setMessage] = useState("");
 	const [room, setRoom] = useState("");
 
-	const sendMessage = () => {
+	const sendMessage = (e) => {
+		e.preventDefault();
 		if (message === "") return;
-		setMessages((prev) => [...prev, message]);
+		if (!socket) return toast.error("Unable to connect to server");
+		socket.emit("send_message", message);
 		setMessage("");
 	};
 
-	const joinRoom = () => {};
+	const joinRoom = (e) => {
+		e.preventDefault();
+	};
 
 	const establishConnection = () => {
-		if (isConnectionEstablished)
+		if (isConnectionEstablished && socket)
 			return toast.error("Connection already established");
-		const socket = io("http://localhost:8080", {
+		const currentSocket = io("http://localhost:8080", {
 			auth: {
 				token: "some-random-token",
 			},
 		});
 		setIsConnectionEstablished(true);
-		socket.on("connect", () => {
+		setSocket(currentSocket);
+		currentSocket.on("connect", () => {
 			toast.success("Made socket connection");
 		});
-		socket.on("message_from_server", (data) => {
+		currentSocket.on("message_from_server", (data) => {
 			toast(`Message from server: ${data}`);
 			console.log(`Message from server: ${data}`);
 		});
-		socket.on("disconnect", () => {
+		currentSocket.on("disconnect", () => {
 			toast.success("Disconnected");
 		});
-		socket.on("connect_error", (err)=>{
+		currentSocket.on("connect_error", (err) => {
 			toast.error(`Connection error: ${err}`);
-		})
+		});
 	};
+
+	useEffect(() => {
+		if (socket) {
+			socket.on("recieve_message", (message) => {
+				setMessages((prev) => [...prev, message]);
+			});
+		}
+	}, [socket]);
+
+	useEffect(() => {
+		establishConnection();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return (
 		<>
