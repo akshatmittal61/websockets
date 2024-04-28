@@ -25,6 +25,10 @@ const App = () => {
 
 	const joinRoom = (e) => {
 		e.preventDefault();
+		if (room === "") return;
+		if (!socket) return toast.error("Unable to connect to server");
+		socket.emit("join_room", room);
+		setRoom("");
 	};
 
 	const establishConnection = () => {
